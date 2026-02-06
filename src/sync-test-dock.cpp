@@ -211,10 +211,16 @@ void SyncTestDock::on_audio_marker_found(struct audio_marker_found_s data)
 void SyncTestDock::on_sync_found(sync_index data)
 {
 	int64_t ts = (int64_t)data.audio_ts - (int64_t)data.video_ts;
-	latencyDisplay->setText(QStringLiteral("%1 ms").arg(ts * 1e-6, 2, 'f', 1));
+	double latency_ms = ts * 1e-6;
+	latencyDisplay->setText(QStringLiteral("%1 ms").arg(latency_ms, 2, 'f', 1));
 	indexDisplay->setText(QStringLiteral("%1").arg(data.index));
 	if (ts > 0)
 		latencyPolarity->setText(obs_module_text("Display.Polarity.Positive"));
 	else if (ts < 0)
 		latencyPolarity->setText(obs_module_text("Display.Polarity.Negative"));
+
+	blog(LOG_INFO, "[sync-dock] latency=%.1f ms  index=%d  video_ts=%llu  audio_ts=%llu",
+	     latency_ms, data.index,
+	     (unsigned long long)data.video_ts,
+	     (unsigned long long)data.audio_ts);
 }
