@@ -13,7 +13,7 @@ public:
 	~SyncTestDock();
 
 private:
-	QPushButton *startButton = nullptr;
+	QPushButton *resetButton = nullptr;
 
 	QLabel *latencyDisplay = nullptr;
 	QLabel *latencyPolarity = nullptr;
@@ -44,7 +44,8 @@ private:
 	double latency_sum_since_summary = 0.0;
 
 private:
-	void on_start_stop();
+	void start_output();
+	void on_reset();
 
 	void on_video_marker_found(video_marker_found_s data);
 	void on_audio_marker_found(audio_marker_found_s data);

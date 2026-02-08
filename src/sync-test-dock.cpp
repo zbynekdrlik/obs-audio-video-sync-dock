@@ -40,9 +40,9 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 
 	int y = 0;
 
-	startButton = new QPushButton(obs_module_text("Button.Start"), this);
-	mainLayout->addWidget(startButton);
-	connect(startButton, &QPushButton::clicked, this, &SyncTestDock::on_start_stop);
+	resetButton = new QPushButton(obs_module_text("Button.Reset"), this);
+	mainLayout->addWidget(resetButton);
+	connect(resetButton, &QPushButton::clicked, this, &SyncTestDock::on_reset);
 
 	QLabel *label;
 	label = new QLabel(obs_module_text("Label.Latency"), this);
@@ -95,6 +95,8 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 
 	mainLayout->addLayout(topLayout);
 	setLayout(mainLayout);
+
+	QTimer::singleShot(0, this, [this]() { start_output(); });
 }
 
 SyncTestDock::~SyncTestDock()
@@ -156,50 +158,56 @@ void SyncTestDock::cb_frame_drop_detected(void *param, calldata_t *cd)
 	QMetaObject::invokeMethod(dock, [dock, found]() { dock->on_frame_drop_detected(found); });
 }
 
-void SyncTestDock::on_start_stop()
+void SyncTestDock::start_output()
 {
-	if (!sync_test) /* request to start */ {
-		OBSOutputAutoRelease o = obs_output_create(OUTPUT_ID, "sync-test-output", nullptr, nullptr);
-		if (!o) {
-			blog(LOG_ERROR, "Failed to create sync-test-output.");
-			return;
-		}
-
-		last_video_ix = last_audio_ix = -1;
-		missed_video_ix = missed_audio_ix = 0;
-		received_video_ix = received_audio_ix = 0;
-		received_video_index_max = 256;
-		received_audio_index_max = 256;
-		audio_index_max = 256;
-		total_frame_drops = 0;
-		total_frames_seen = 0;
-		last_summary_ts = 0;
-		sync_count_since_summary = 0;
-		latency_sum_since_summary = 0.0;
-
-		auto *sh = obs_output_get_signal_handler(o);
-		signal_handler_connect(sh, "video_marker_found", cb_video_marker_found, this);
-		signal_handler_connect(sh, "audio_marker_found", cb_audio_marker_found, this);
-		signal_handler_connect(sh, "sync_found", cb_sync_found, this);
-		signal_handler_connect(sh, "frame_drop_detected", cb_frame_drop_detected, this);
-
-		bool success = obs_output_start(o);
-
-		if (!success)
-			latencyPolarity->setText(obs_module_text("Display.Polarity.Failure"));
-
-		if (startButton)
-			startButton->setText(obs_module_text("Button.Stop"));
-
-		sync_test = o;
+	OBSOutputAutoRelease o = obs_output_create(OUTPUT_ID, "sync-test-output", nullptr, nullptr);
+	if (!o) {
+		blog(LOG_ERROR, "Failed to create sync-test-output.");
+		return;
 	}
-	else /* request to stop */ {
+
+	last_video_ix = last_audio_ix = -1;
+	missed_video_ix = missed_audio_ix = 0;
+	received_video_ix = received_audio_ix = 0;
+	received_video_index_max = 256;
+	received_audio_index_max = 256;
+	audio_index_max = 256;
+	total_frame_drops = 0;
+	total_frames_seen = 0;
+	last_summary_ts = 0;
+	sync_count_since_summary = 0;
+	latency_sum_since_summary = 0.0;
+
+	auto *sh = obs_output_get_signal_handler(o);
+	signal_handler_connect(sh, "video_marker_found", cb_video_marker_found, this);
+	signal_handler_connect(sh, "audio_marker_found", cb_audio_marker_found, this);
+	signal_handler_connect(sh, "sync_found", cb_sync_found, this);
+	signal_handler_connect(sh, "frame_drop_detected", cb_frame_drop_detected, this);
+
+	bool success = obs_output_start(o);
+
+	if (!success)
+		latencyPolarity->setText(obs_module_text("Display.Polarity.Failure"));
+
+	sync_test = o;
+}
+
+void SyncTestDock::on_reset()
+{
+	if (sync_test) {
 		obs_output_stop(sync_test);
 		sync_test = nullptr;
-
-		if (startButton)
-			startButton->setText(obs_module_text("Button.Start"));
 	}
+
+	latencyDisplay->setText("-");
+	latencyPolarity->setText("-");
+	indexDisplay->setText("-");
+	frequencyDisplay->setText("-");
+	videoIndexDisplay->setText("-");
+	audioIndexDisplay->setText("-");
+	frameDropDisplay->setText("-");
+
+	start_output();
 }
 
 static int missed_markers(int index, int last_index, int max_index)
