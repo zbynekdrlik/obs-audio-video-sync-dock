@@ -334,6 +334,14 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 	if (ndi_latency_count >= 10) {
 		double avg_latency_ms = (double)ndi_latency_sum_ns / (double)ndi_latency_count / 1e6;
 		ndiLatencyDisplay->setText(QStringLiteral("%1 ms").arg(avg_latency_ms, 0, 'f', 1));
+
+		// Log periodically (every ~30 frames = ~1 second at 30fps)
+		static int log_counter = 0;
+		if (++log_counter >= 3) {
+			blog(LOG_DEBUG, "[sync-dock] NDI delivery latency=%.1f ms", avg_latency_ms);
+			log_counter = 0;
+		}
+
 		ndi_latency_sum_ns = 0;
 		ndi_latency_count = 0;
 	}
