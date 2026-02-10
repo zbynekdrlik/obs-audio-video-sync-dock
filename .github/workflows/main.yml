@@ -21,6 +21,7 @@ env:
 
 jobs:
   linux_build:
+    if: false  # Disabled - Windows only
     runs-on: ${{ matrix.ubuntu }}
     strategy:
       fail-fast: false
@@ -79,6 +80,7 @@ jobs:
           ls /usr/share/obs/obs-plugins/${PLUGIN_NAME}/
 
   macos_build:
+    if: false  # Disabled - Windows only
     runs-on: macos-14
     strategy:
       fail-fast: false
