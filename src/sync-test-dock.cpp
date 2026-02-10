@@ -340,9 +340,10 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 {
 	// NDI Release: capture → presentation (total delay)
-	// = presentation_ns - ndi_timecode_ns
+	// = pipeline_latency + ts_ahead
+	// = (capture → now) + (now → presentation)
 	// Always positive: frame presented AFTER capture
-	int64_t ndi_release_ns = timing.presentation_ns - timing.ndi_timecode_ns;
+	int64_t ndi_release_ns = timing.pipeline_latency_ns + timing.ts_ahead_ns;
 
 	// NDI Receive: capture → receive (network speed)
 	// = wall_clock - ndi_timecode (already computed as pipeline_latency)
