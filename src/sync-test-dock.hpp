@@ -7,11 +7,22 @@
 
 // NDI timing information received from DistroAV ndi_source
 // Must match the struct definition in ndi-source.cpp
+// Fields are ordered in frame processing order for clarity
 typedef struct ndi_timing_info_t {
-	int64_t ndi_timecode_ns;      // Raw NDI PTP capture time (nanoseconds)
-	int64_t presentation_ns;       // OBS presentation timestamp (nanoseconds)
-	int64_t pipeline_latency_ns;   // wall_clock - ndi_timecode (network + processing delay)
-	int64_t ts_ahead_ns;          // presentation - obs_now (buffer headroom)
+	// Input values
+	int64_t ndi_timecode_ns;       // 1. Raw NDI PTP capture time from sender
+	int64_t clock_offset_ns;       // 2. Conversion factor: wall_clock - obs_clock
+	int64_t buffer_ns;             // 3. User's buffer setting in nanoseconds
+
+	// Computed values
+	int64_t presentation_ns;       // 4. OBS presentation timestamp = ndi_tc - clock_offset + buffer
+	int64_t obs_now_ns;            // 5. Current OBS monotonic time at signal emission
+
+	// Derived metrics
+	int64_t ts_ahead_ns;           // 6. presentation - obs_now (buffer headroom, >0 = future)
+	int64_t pipeline_latency_ns;   // 7. wall_now - ndi_timecode (network + processing delay)
+
+	// Debug
 	uint64_t frame_number;         // Sequential video frame counter
 } ndi_timing_info_t;
 
@@ -34,6 +45,16 @@ private:
 	QLabel *frameDropDisplay = nullptr;
 	QLabel *ndiReleaseDisplay = nullptr;
 	QLabel *ndiReceiveDisplay = nullptr;
+
+	// NDI timing detail displays (in processing order)
+	QLabel *ndiTimecodeDisplay = nullptr;
+	QLabel *clockOffsetDisplay = nullptr;
+	QLabel *bufferDisplay = nullptr;
+	QLabel *presentationDisplay = nullptr;
+	QLabel *obsNowDisplay = nullptr;
+	QLabel *tsAheadDisplay = nullptr;
+	QLabel *pipelineDisplay = nullptr;
+	QLabel *frameNumberDisplay = nullptr;
 
 private:
 	OBSOutput sync_test;

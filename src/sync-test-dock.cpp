@@ -101,6 +101,64 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	ndiReceiveDisplay->setObjectName("ndiReceiveDisplay");
 	topLayout->addWidget(ndiReceiveDisplay, y++, 1);
 
+	// --- NDI Timing Details (in processing order for debugging) ---
+
+	// 8. NDI Timecode (raw capture time from sender)
+	label = new QLabel("NDI Timecode:", this);
+	topLayout->addWidget(label, y, 0);
+	ndiTimecodeDisplay = new QLabel("-", this);
+	ndiTimecodeDisplay->setObjectName("ndiTimecodeDisplay");
+	topLayout->addWidget(ndiTimecodeDisplay, y++, 1);
+
+	// 9. Clock Offset (wall_clock - obs_clock conversion factor)
+	label = new QLabel("Clock Offset:", this);
+	topLayout->addWidget(label, y, 0);
+	clockOffsetDisplay = new QLabel("-", this);
+	clockOffsetDisplay->setObjectName("clockOffsetDisplay");
+	topLayout->addWidget(clockOffsetDisplay, y++, 1);
+
+	// 10. Buffer (user's buffer setting)
+	label = new QLabel("Buffer:", this);
+	topLayout->addWidget(label, y, 0);
+	bufferDisplay = new QLabel("-", this);
+	bufferDisplay->setObjectName("bufferDisplay");
+	topLayout->addWidget(bufferDisplay, y++, 1);
+
+	// 11. Presentation (computed: ndi_tc - clock_offset + buffer)
+	label = new QLabel("Presentation:", this);
+	topLayout->addWidget(label, y, 0);
+	presentationDisplay = new QLabel("-", this);
+	presentationDisplay->setObjectName("presentationDisplay");
+	topLayout->addWidget(presentationDisplay, y++, 1);
+
+	// 12. OBS Now (current OBS monotonic time)
+	label = new QLabel("OBS Now:", this);
+	topLayout->addWidget(label, y, 0);
+	obsNowDisplay = new QLabel("-", this);
+	obsNowDisplay->setObjectName("obsNowDisplay");
+	topLayout->addWidget(obsNowDisplay, y++, 1);
+
+	// 13. TS Ahead (buffer headroom: presentation - obs_now)
+	label = new QLabel("TS Ahead:", this);
+	topLayout->addWidget(label, y, 0);
+	tsAheadDisplay = new QLabel("-", this);
+	tsAheadDisplay->setObjectName("tsAheadDisplay");
+	topLayout->addWidget(tsAheadDisplay, y++, 1);
+
+	// 14. Pipeline (network latency: wall_now - ndi_timecode)
+	label = new QLabel("Pipeline:", this);
+	topLayout->addWidget(label, y, 0);
+	pipelineDisplay = new QLabel("-", this);
+	pipelineDisplay->setObjectName("pipelineDisplay");
+	topLayout->addWidget(pipelineDisplay, y++, 1);
+
+	// 15. Frame # (sequential counter)
+	label = new QLabel("Frame #:", this);
+	topLayout->addWidget(label, y, 0);
+	frameNumberDisplay = new QLabel("-", this);
+	frameNumberDisplay->setObjectName("frameNumberDisplay");
+	topLayout->addWidget(frameNumberDisplay, y++, 1);
+
 	// Hidden elements for backward compatibility (Index used internally)
 	indexDisplay = new QLabel("-", this);
 	indexDisplay->setObjectName("indexDisplay");
@@ -339,6 +397,42 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 
 void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 {
+	// --- Update detail displays (every frame for debugging) ---
+	// Show all timing variables in processing order
+
+	// 1. NDI Timecode (display as milliseconds since some epoch, truncated for readability)
+	int64_t tc_ms = timing.ndi_timecode_ns / 1000000;
+	ndiTimecodeDisplay->setText(QStringLiteral("%1").arg(tc_ms % 1000000));  // Last 6 digits
+
+	// 2. Clock Offset (stable conversion factor)
+	int64_t offset_ms = timing.clock_offset_ns / 1000000;
+	clockOffsetDisplay->setText(QStringLiteral("%1 ms").arg(offset_ms % 1000000));
+
+	// 3. Buffer (user setting)
+	int64_t buffer_ms = timing.buffer_ns / 1000000;
+	bufferDisplay->setText(QStringLiteral("%1 ms").arg(buffer_ms));
+
+	// 4. Presentation (computed timestamp)
+	int64_t pres_ms = timing.presentation_ns / 1000000;
+	presentationDisplay->setText(QStringLiteral("%1").arg(pres_ms % 1000000));
+
+	// 5. OBS Now (current time)
+	int64_t now_ms = timing.obs_now_ns / 1000000;
+	obsNowDisplay->setText(QStringLiteral("%1").arg(now_ms % 1000000));
+
+	// 6. TS Ahead (buffer headroom - most important metric!)
+	double ts_ahead_ms = (double)timing.ts_ahead_ns / 1e6;
+	tsAheadDisplay->setText(QStringLiteral("%1 ms").arg(ts_ahead_ms, 0, 'f', 1));
+
+	// 7. Pipeline (network latency)
+	double pipeline_ms = (double)timing.pipeline_latency_ns / 1e6;
+	pipelineDisplay->setText(QStringLiteral("%1 ms").arg(pipeline_ms, 0, 'f', 1));
+
+	// 8. Frame number
+	frameNumberDisplay->setText(QStringLiteral("%1").arg(timing.frame_number));
+
+	// --- Update averaged NDI Release/Receive displays ---
+
 	// NDI Release: capture → presentation (total delay)
 	// = pipeline_latency + ts_ahead
 	// = (capture → now) + (now → presentation)
@@ -364,8 +458,8 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 		// Log periodically (every ~30 frames = ~1 second at 30fps)
 		static int log_counter = 0;
 		if (++log_counter >= 3) {
-			blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms",
-			     avg_release_ms, avg_receive_ms);
+			blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms, ts_ahead=%.1f ms",
+			     avg_release_ms, avg_receive_ms, ts_ahead_ms);
 			log_counter = 0;
 		}
 
