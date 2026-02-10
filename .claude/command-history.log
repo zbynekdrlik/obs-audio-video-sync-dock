@@ -1,0 +1,261 @@
+[2026-02-06 16:55:09] find /home/newlevel/devel/obs-audio-video-sync-dock -type f -name \
+[2026-02-06 16:55:11] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/
+[2026-02-06 16:55:14] find /home/newlevel/devel/obs-audio-video-sync-dock -type f -name \
+[2026-02-06 16:55:16] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/src/
+[2026-02-06 16:55:17] find /home/newlevel/devel/obs-audio-video-sync-dock -type d | head -20
+[2026-02-06 16:55:18] ls -la /home/newlevel/devel/obs-audio-video-sync-dock
+[2026-02-06 16:55:19] git log --oneline -20
+[2026-02-06 16:55:19] find /home/newlevel/devel/obs-audio-video-sync-dock -maxdepth 2 -type d | sort
+[2026-02-06 16:55:20] git show --stat 61d0eb4
+[2026-02-06 16:55:21] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/tool/ && echo \
+[2026-02-06 16:55:22] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/docs/
+[2026-02-06 16:55:23] find /home/newlevel/devel/obs-audio-video-sync-dock -type f -name \
+[2026-02-06 16:55:23] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/data/
+[2026-02-06 16:55:25] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/
+[2026-02-06 16:55:26] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/tool/
+[2026-02-06 16:55:28] find /home/newlevel/devel/obs-audio-video-sync-dock -type f -name \
+[2026-02-06 16:55:31] git show 61d0eb4 -- src/sync-test-dock.cpp
+[2026-02-06 16:55:31] find /home/newlevel/devel/obs-audio-video-sync-dock/ci -type f | head -20
+[2026-02-06 16:55:38] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/src/
+[2026-02-06 16:55:38] find /home/newlevel/devel/obs-audio-video-sync-dock/src -type f -name \
+[2026-02-06 16:55:41] git log -10 --pretty=format:\
+[2026-02-06 16:55:43] grep -n \
+[2026-02-06 16:55:44] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/deps/quirc/
+[2026-02-06 16:55:46] find /home/newlevel/devel/obs-audio-video-sync-dock/data -type f | head -20
+[2026-02-06 16:55:47] grep -n \
+[2026-02-06 16:55:48] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/.github/workflows/
+[2026-02-06 16:55:50] git log --all --oneline --graph | head -30
+[2026-02-06 16:55:54] find /home/newlevel/devel/obs-audio-video-sync-dock -name \
+[2026-02-06 16:55:54] git log --oneline -20
+[2026-02-06 16:55:56] git show 61d0eb4 --stat
+[2026-02-06 16:55:56] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/.github/
+[2026-02-06 16:55:57] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/.github/workflows/
+[2026-02-06 16:56:00] find /home/newlevel/devel/obs-audio-video-sync-dock -type f -name \
+[2026-02-06 16:56:05] grep -r \
+[2026-02-06 16:56:07] git log --oneline -20
+[2026-02-06 16:57:17] find /home/newlevel/devel/obs-audio-video-sync-dock -type f | head -80
+[2026-02-06 16:57:17] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/
+[2026-02-06 16:57:35] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/ci/
+[2026-02-06 16:57:45] git diff main..HEAD
+[2026-02-06 17:09:28] git diff --stat
+[2026-02-06 17:19:56] ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=accept-new newlevel@stream.lan \
+[2026-02-06 17:20:07] which ssh && which sshpass
+[2026-02-06 17:20:07] uname -a
+[2026-02-06 17:20:13] sshpass -p newlevel ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=accept-new newlevel@stream.lan \
+[2026-02-06 17:20:20] sshpass -p newlevel ssh -o ConnectTimeout=5 newlevel@stream.lan \
+[2026-02-06 17:20:26] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:20:32] ls /home/newlevel/devel/obs-audio-video-sync-dock/build* 2>/dev/null && echo \
+[2026-02-06 17:20:39] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:20:40] ls -la /home/newlevel/devel/obs-audio-video-sync-dock/build*/  2>/dev/null; find /home/newlevel/devel/obs-audio-video-sync-dock -name \
+[2026-02-06 17:20:46] which x86_64-w64-mingw32-gcc 2>/dev/null; dpkg -l | grep -i mingw 2>/dev/null | head -5
+[2026-02-06 17:20:47] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:20:54] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:21:05] find /home/newlevel/devel/obs-audio-video-sync-dock/ci -type f | head -20
+[2026-02-06 17:21:19] dpkg -l | grep -i \
+[2026-02-06 17:21:21] find /home/newlevel -maxdepth 4 -name \
+[2026-02-06 17:21:22] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:21:43] dpkg -l | grep \
+[2026-02-06 17:21:48] dpkg -l | grep \
+[2026-02-06 17:21:55] cmake -S . -B build-local -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1
+[2026-02-06 17:22:02] git -C /home/newlevel/devel/obs-audio-video-sync-dock submodule update --init --recursive 2>&1
+[2026-02-06 17:22:16] cmake -S /home/newlevel/devel/obs-audio-video-sync-dock -B /home/newlevel/devel/obs-audio-video-sync-dock/build-local -DCMAKE_BUILD_TYPE=RelWithDebInfo 2>&1
+[2026-02-06 17:22:21] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local --config RelWithDebInfo -j4 2>&1
+[2026-02-06 17:22:41] python3 tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=442,c=1' -o /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-06 17:22:47] pip3 install Pillow qrcode 2>&1
+[2026-02-06 17:22:53] python3 -m venv /tmp/videogen-venv && /tmp/videogen-venv/bin/pip install Pillow qrcode 2>&1
+[2026-02-06 17:23:05] /tmp/videogen-venv/bin/python3 /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=442,c=1' -o /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-06 17:23:18] sudo apt-get install -y ffmpeg 2>&1 | tail -5
+[2026-02-06 17:23:30] /tmp/videogen-venv/bin/python3 /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=442,c=1' -o /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-06 17:23:57] ffprobe -v quiet -show_entries stream=nb_frames,r_frame_rate,duration -select_streams v:0 /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-06 17:23:59] ls -lh /tmp/frame-drop-3000.mp4
+[2026-02-06 17:24:04] sshpass -p newlevel scp /tmp/frame-drop-3000.mp4 newlevel@stream.lan:\
+[2026-02-06 17:24:16] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:24:31] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:24:37] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:24:45] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:25:18] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:25:25] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:25:35] tail -5 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b84cc3c.output
+[2026-02-06 17:30:36] tail -10 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b84cc3c.output
+[2026-02-06 17:30:46] git remote -v
+[2026-02-06 17:30:51] git -C /home/newlevel/devel/obs-audio-video-sync-dock push origin add-latency-logging 2>&1
+[2026-02-06 17:31:00] git -C /home/newlevel/devel/obs-audio-video-sync-dock status && echo \
+[2026-02-06 17:31:13] git add data/locale/en-US.ini docs/generate-pattern.sh src/sync-test-dock.cpp src/sync-test-dock.hpp src/sync-test-output.cpp src/sync-test-output.hpp tool/videogen.py && git commit -m \
+[2026-02-06 17:31:19] git log -1 --format='%an <%ae>' 2>&1
+[2026-02-06 17:31:25] git -C /home/newlevel/devel/obs-audio-video-sync-dock -c user.name=\
+[2026-02-06 17:31:31] git -C /home/newlevel/devel/obs-audio-video-sync-dock push origin add-latency-logging 2>&1
+[2026-02-06 17:31:38] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:31:39] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:31:41] gh run list --repo zbynekdrlik/obs-audio-video-sync-dock --branch add-latency-logging --limit 3 2>&1
+[2026-02-06 17:31:52] gh workflow run \
+[2026-02-06 17:32:00] cat /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b595153.output
+[2026-02-06 17:32:01] cat /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b9cc00a.output
+[2026-02-06 17:37:14] gh run list --repo zbynekdrlik/obs-audio-video-sync-dock --branch add-latency-logging --limit 5 2>&1
+[2026-02-06 17:37:24] gh run download 21757977807 --repo zbynekdrlik/obs-audio-video-sync-dock --name \
+[2026-02-06 17:37:31] ls -la /tmp/obs-plugin-artifact/
+[2026-02-06 17:37:37] unzip -l /tmp/obs-plugin-artifact/obs-audio-video-sync-dock-6a4f6cc-obs32-Windows.zip 2>&1
+[2026-02-06 17:37:44] unzip -o /tmp/obs-plugin-artifact/obs-audio-video-sync-dock-6a4f6cc-obs32-Windows.zip -d /tmp/obs-plugin-extracted 2>&1
+[2026-02-06 17:37:52] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:42:08] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:42:14] sshpass -p newlevel scp /tmp/obs-plugin-extracted/obs-plugins/64bit/obs-audio-video-sync-dock.dll \
+[2026-02-06 17:42:18] sshpass -p newlevel scp /tmp/obs-plugin-extracted/obs-plugins/64bit/obs-audio-video-sync-dock.pdb \
+[2026-02-06 17:42:20] sshpass -p newlevel scp /tmp/obs-plugin-extracted/data/obs-plugins/obs-audio-video-sync-dock/locale/en-US.ini \
+[2026-02-06 17:42:28] tail -3 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b595153.output && echo \
+[2026-02-06 17:42:35] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:42:42] sleep 5 && sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:42:56] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:02] sleep 10 && sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:21] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:23] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:29] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:40] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:43:52] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:44:11] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:44:17] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:44:59] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:45:11] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:45:23] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:45:31] tail -3 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/b595153.output 2>/dev/null; echo \
+[2026-02-06 17:45:38] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:47:09] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:47:36] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 17:49:15] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:14:34] tail -5 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/bf929e9.output
+[2026-02-06 18:14:56] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:15:26] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:16:11] tail -3 /tmp/claude-1000/-home-newlevel-devel-obs-audio-video-sync-dock/tasks/bf69b1d.output 2>&1 | grep -v \
+[2026-02-06 18:16:17] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:16:22] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:16:29] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:16:36] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:16:44] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:17:21] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:17:27] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-06 18:17:40] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 11:34:20] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local --config RelWithDebInfo -j4 2>&1
+[2026-02-07 11:34:25] /tmp/videogen-venv/bin/python3 /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=442,c=1' -o /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-07 11:34:45] ffprobe -v quiet -show_entries stream=codec_type,sample_rate,duration,nb_frames -select_streams a:0 /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-07 11:34:48] ffmpeg -v quiet -i /tmp/frame-drop-3000.mp4 -af \
+[2026-02-07 11:34:54] ffmpeg -v quiet -i /tmp/frame-drop-3000.mp4 -af \
+[2026-02-07 11:34:59] ffmpeg -i /tmp/frame-drop-3000.mp4 -af \
+[2026-02-07 11:35:11] git add tool/videogen.py src/sync-test-output.cpp && git -c user.name=\
+[2026-02-07 11:35:17] git push origin add-latency-logging 2>&1
+[2026-02-07 11:35:25] gh workflow run \
+[2026-02-07 11:35:31] sleep 10 && gh run list --repo zbynekdrlik/obs-audio-video-sync-dock --branch add-latency-logging --limit 3 2>&1
+[2026-02-07 11:35:49] sshpass -p newlevel scp /tmp/frame-drop-3000.mp4 newlevel@stream.lan:\
+[2026-02-07 11:35:54] gh run watch 21778722340 --repo zbynekdrlik/obs-audio-video-sync-dock 2>&1
+[2026-02-07 11:37:07] gh run view 21778722340 --repo zbynekdrlik/obs-audio-video-sync-dock 2>&1 | head -5
+[2026-02-07 11:37:18] rm -rf /tmp/obs-plugin-artifact && gh run download 21778722340 --repo zbynekdrlik/obs-audio-video-sync-dock --name \
+[2026-02-07 11:37:25] rm -rf /tmp/obs-plugin-extracted && unzip -o /tmp/obs-plugin-artifact/*Windows.zip -d /tmp/obs-plugin-extracted 2>&1
+[2026-02-07 11:39:17] ls -la /tmp/obs-plugin-extracted/obs-plugins/64bit/
+[2026-02-07 11:39:18] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 11:39:23] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 11:39:28] sshpass -p newlevel scp /tmp/obs-plugin-extracted/obs-plugins/64bit/obs-audio-video-sync-dock.dll \
+[2026-02-07 11:39:29] sshpass -p newlevel scp /tmp/obs-plugin-extracted/obs-plugins/64bit/obs-audio-video-sync-dock.pdb \
+[2026-02-07 11:39:34] sshpass -p newlevel scp /home/newlevel/devel/obs-audio-video-sync-dock/data/locale/en-US.ini \
+[2026-02-07 11:39:39] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 11:39:43] sshpass -p newlevel scp /home/newlevel/devel/obs-audio-video-sync-dock/data/locale/en-US.ini \
+[2026-02-07 11:47:08] /tmp/videogen-venv/bin/python3 /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=442,c=2' -o /tmp/frame-drop-3000.mp4
+[2026-02-07 11:49:22] /tmp/videogen-venv/bin/python3 /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py --vr 30 --ar 48000 --frame-drop 'f=884,c=2' -o /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-07 11:49:39] ffprobe -v error -show_entries stream=codec_type,sample_rate,channels,duration -of compact /tmp/frame-drop-3000.mp4 2>&1
+[2026-02-07 11:49:41] ffmpeg -i /tmp/frame-drop-3000.mp4 -af volumedetect -f null /dev/null 2>&1 | grep -E 'mean_volume|max_volume'
+[2026-02-07 11:49:47] git diff
+[2026-02-07 11:49:55] git add tool/videogen.py docs/generate-pattern.sh && git -c user.name=\
+[2026-02-07 11:50:00] git push origin add-latency-logging 2>&1
+[2026-02-07 11:50:05] gh workflow run \
+[2026-02-07 11:50:09] gh workflow run \
+[2026-02-07 11:50:16] sshpass -p newlevel scp /tmp/frame-drop-3000.mp4 \
+[2026-02-07 11:50:21] sleep 10 && gh run list --workflow=\
+[2026-02-07 11:50:36] sleep 60 && gh run list --workflow=\
+[2026-02-07 11:51:41] sleep 30 && gh run list --workflow=\
+[2026-02-07 11:52:18] rm -rf /tmp/obs-plugin-extracted && gh run download 21778891962 -R zbynekdrlik/obs-audio-video-sync-dock -n obs-audio-video-sync-dock-windows-x64-obs32 -D /tmp/obs-plugin-extracted 2>&1
+[2026-02-07 11:52:21] gh run view 21778891962 -R zbynekdrlik/obs-audio-video-sync-dock 2>&1 | grep -i artifact
+[2026-02-07 11:52:30] gh api repos/zbynekdrlik/obs-audio-video-sync-dock/actions/runs/21778891962/artifacts 2>&1 | python3 -c \
+[2026-02-07 11:52:35] gh api repos/zbynekdrlik/obs-audio-video-sync-dock/actions/runs/21778891962/artifacts 2>&1
+[2026-02-07 11:52:39] rm -rf /tmp/obs-plugin-extracted && gh run download 21778891962 -R zbynekdrlik/obs-audio-video-sync-dock -n \
+[2026-02-07 11:52:44] ls -la /tmp/obs-plugin-extracted/obs-plugins/64bit/
+[2026-02-07 11:52:48] find /tmp/obs-plugin-extracted -type f 2>/dev/null | head -20
+[2026-02-07 11:52:51] cd /tmp && unzip -o /tmp/obs-plugin-extracted/obs-audio-video-sync-dock-58dc6b0-obs32-Windows.zip -d /tmp/obs-plugin-extracted/unpacked 2>&1
+[2026-02-07 11:52:55] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 11:52:59] sshpass -p newlevel scp /tmp/obs-plugin-extracted/unpacked/obs-plugins/64bit/obs-audio-video-sync-dock.dll \
+[2026-02-07 11:53:02] sshpass -p newlevel scp /tmp/obs-plugin-extracted/unpacked/obs-plugins/64bit/obs-audio-video-sync-dock.pdb \
+[2026-02-07 12:05:35] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:05:41] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:05:48] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:06:19] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:06:27] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:06:32] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:12:27] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1
+[2026-02-07 12:12:44] git add src/sync-test-output.hpp src/sync-test-output.cpp && git -c user.name=\
+[2026-02-07 12:12:48] git push origin add-latency-logging 2>&1
+[2026-02-07 12:12:53] gh workflow run \
+[2026-02-07 12:13:00] sleep 90 && gh run list --workflow=\
+[2026-02-07 12:14:37] rm -rf /tmp/obs-plugin-extracted && gh run download 21779169164 -R zbynekdrlik/obs-audio-video-sync-dock -n \
+[2026-02-07 12:14:43] sshpass -p newlevel ssh newlevel@stream.lan \
+[2026-02-07 12:14:49] sshpass -p newlevel scp /tmp/obs-plugin-extracted/unpacked/obs-plugins/64bit/obs-audio-video-sync-dock.dll \
+[2026-02-07 17:44:06] git log main..HEAD --oneline
+[2026-02-07 17:44:11] git diff main..HEAD
+[2026-02-07 17:44:19] git log --oneline --graph main..HEAD
+[2026-02-07 17:44:25] git remote -v
+[2026-02-07 17:44:29] git diff main..HEAD --stat
+[2026-02-07 17:44:35] grep -n \
+[2026-02-07 17:44:37] git log --format=\
+[2026-02-07 17:44:42] find /home/newlevel/devel/obs-audio-video-sync-dock -name \
+[2026-02-07 17:44:44] git log --all --oneline --grep=\
+[2026-02-07 17:44:48] git show upstream/main:src/sync-test-output.cpp | grep -n \
+[2026-02-07 17:44:49] git show main:src/sync-test-output.cpp | grep -n \
+[2026-02-07 17:44:50] git diff main:src/sync-test-output.cpp HEAD:src/sync-test-output.cpp | grep -A 2 -B 2 \
+[2026-02-07 19:10:40] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1
+[2026-02-07 19:10:55] git log --oneline main..HEAD
+[2026-02-07 19:10:56] git diff --name-only main..HEAD
+[2026-02-07 19:10:57] git diff --name-only HEAD
+[2026-02-07 19:11:06] git diff main -- src/sync-test-dock.cpp src/sync-test-dock.hpp src/sync-test-output.cpp src/sync-test-output.hpp data/locale/en-US.ini 2>&1 | head -500
+[2026-02-07 19:11:20] git stash
+[2026-02-07 19:11:24] git stash pop
+[2026-02-07 19:11:36] mkdir -p /tmp/obs-squash-final && cp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.hpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.hpp /home/newlevel/devel/obs-audio-video-sync-dock/data/locale/en-US.ini /tmp/obs-squash-final/ && cp /home/newlevel/devel/obs-audio-video-sync-dock/.github/workflows/main.yml /tmp/obs-squash-final/ && cp /home/newlevel/devel/obs-audio-video-sync-dock/docs/generate-pattern.sh /tmp/obs-squash-final/ && cp /home/newlevel/devel/obs-audio-video-sync-dock/tool/videogen.py /tmp/obs-squash-final/
+[2026-02-07 19:11:42] mkdir -p /tmp/obs-squash-main && git show main:src/sync-test-dock.cpp > /tmp/obs-squash-main/sync-test-dock.cpp && git show main:src/sync-test-dock.hpp > /tmp/obs-squash-main/sync-test-dock.hpp && git show main:src/sync-test-output.cpp > /tmp/obs-squash-main/sync-test-output.cpp && git show main:src/sync-test-output.hpp > /tmp/obs-squash-main/sync-test-output.hpp
+[2026-02-07 19:13:41] cp /tmp/obs-squash-main/sync-test-output.cpp /tmp/obs-squash-intermediate/sync-test-output.cpp
+[2026-02-07 19:14:17] git reset --soft main
+[2026-02-07 19:14:22] git reset HEAD
+[2026-02-07 19:14:29] cp /tmp/obs-squash-intermediate/sync-test-dock.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.cpp && cp /tmp/obs-squash-intermediate/sync-test-dock.hpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.hpp && cp /tmp/obs-squash-intermediate/sync-test-output.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.cpp && cp /tmp/obs-squash-intermediate/sync-test-output.hpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.hpp
+[2026-02-07 19:14:34] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1
+[2026-02-07 19:14:46] git add src/sync-test-dock.cpp src/sync-test-dock.hpp src/sync-test-output.cpp src/sync-test-output.hpp data/locale/en-US.ini .github/workflows/main.yml docs/generate-pattern.sh tool/videogen.py
+[2026-02-07 19:14:54] git commit --author=\
+[2026-02-07 19:14:58] git config user.email \
+[2026-02-07 19:15:04] git commit -m \
+[2026-02-07 19:15:11] cp /tmp/obs-squash-final/sync-test-dock.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.cpp && cp /tmp/obs-squash-final/sync-test-dock.hpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-dock.hpp && cp /tmp/obs-squash-final/sync-test-output.cpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.cpp && cp /tmp/obs-squash-final/sync-test-output.hpp /home/newlevel/devel/obs-audio-video-sync-dock/src/sync-test-output.hpp
+[2026-02-07 19:15:16] git diff --stat
+[2026-02-07 19:15:20] git diff
+[2026-02-07 19:15:29] git add src/sync-test-dock.cpp src/sync-test-dock.hpp src/sync-test-output.cpp src/sync-test-output.hpp && git commit -m \
+[2026-02-07 19:15:33] git log --oneline main..HEAD
+[2026-02-07 19:15:37] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1
+[2026-02-07 19:15:52] git remote -v
+[2026-02-07 19:15:57] git push origin add-latency-logging --force-with-lease 2>&1
+[2026-02-07 19:16:15] gh pr create --repo norihiro/obs-audio-video-sync-dock --head zbynekdrlik:add-latency-logging --base main --title \
+[2026-02-07 19:18:17] gh pr comment 19 --repo norihiro/obs-audio-video-sync-dock --body \
+[2026-02-08 14:39:14] find /home/newlevel/devel/obs-audio-video-sync-dock/src -type f -name \
+[2026-02-08 14:39:21] find /home/newlevel/devel/obs-audio-video-sync-dock/src -type f -name \
+[2026-02-08 14:39:26] grep -r \
+[2026-02-08 14:39:30] grep -r \
+[2026-02-08 14:39:35] find /home/newlevel/devel/obs-audio-video-sync-dock -name \
+[2026-02-08 14:45:17] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1
+[2026-02-08 21:58:35] git status
+[2026-02-08 21:58:39] git diff --stat
+[2026-02-08 21:58:40] git log --oneline -5
+[2026-02-08 21:58:45] git add data/locale/en-US.ini src/sync-test-dock.cpp src/sync-test-dock.hpp && git commit -m \
+[2026-02-08 21:58:50] git push origin add-latency-logging 2>&1
+[2026-02-08 21:58:55] gh workflow run \
+[2026-02-08 21:59:02] sleep 5 && gh run list --workflow=\
+[2026-02-08 21:59:13] gh run watch 21805260853 -R zbynekdrlik/obs-audio-video-sync-dock 2>&1
+[2026-02-08 22:01:13] gh run view 21805260853 -R zbynekdrlik/obs-audio-video-sync-dock --json conclusion,status -q '.status + \
+[2026-02-08 22:01:20] gh run download 21805260853 -R zbynekdrlik/obs-audio-video-sync-dock -n \
+[2026-02-08 22:01:25] gh run view 21805260853 -R zbynekdrlik/obs-audio-video-sync-dock --json artifacts -q '.artifacts[].name' 2>&1
+[2026-02-08 22:01:30] gh api repos/zbynekdrlik/obs-audio-video-sync-dock/actions/runs/21805260853/artifacts --jq '.artifacts[] | select(.name | contains(\
+[2026-02-08 22:01:35] rm -rf /tmp/obs-deploy && gh run download 21805260853 -R zbynekdrlik/obs-audio-video-sync-dock -n \
+[2026-02-08 22:01:41] ls -la /tmp/obs-deploy/
+[2026-02-08 22:01:45] cd /tmp/obs-deploy && unzip -o obs-audio-video-sync-dock-0ec0b7f-obs32-Windows.zip -d extracted 2>&1
+[2026-02-08 22:01:49] ssh newlevel@stream.lan 'taskkill /IM obs64.exe /F' 2>&1
+[2026-02-08 22:01:56] scp /tmp/obs-deploy/extracted/obs-plugins/64bit/obs-audio-video-sync-dock.dll /tmp/obs-deploy/extracted/obs-plugins/64bit/obs-audio-video-sync-dock.pdb 'newlevel@stream.lan:C:\\Program Files\\obs-studio\\obs-plugins\\64bit\\' 2>&1
+[2026-02-08 22:02:02] scp /tmp/obs-deploy/extracted/data/obs-plugins/obs-audio-video-sync-dock/locale/en-US.ini 'newlevel@stream.lan:C:\\Program Files\\obs-studio\\data\\obs-plugins\\obs-audio-video-sync-dock\\locale\\en-US.ini' 2>&1
+[2026-02-09 13:08:55] find /home/newlevel/devel/obs-audio-video-sync-dock -type f \\( -name \
+[2026-02-09 13:19:07] cmake --build /home/newlevel/devel/obs-audio-video-sync-dock/build-local -j4 2>&1

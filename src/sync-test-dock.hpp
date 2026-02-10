@@ -32,7 +32,8 @@ private:
 	QLabel *videoIndexDisplay = nullptr;
 	QLabel *audioIndexDisplay = nullptr;
 	QLabel *frameDropDisplay = nullptr;
-	QLabel *ndiLatencyDisplay = nullptr;
+	QLabel *ndiAlignedDisplay = nullptr;
+	QLabel *ndiRawLatencyDisplay = nullptr;
 
 private:
 	OBSOutput sync_test;
@@ -57,7 +58,8 @@ private:
 	double latency_sum_since_summary = 0.0;
 
 	// NDI latency tracking (averaged over multiple frames)
-	int64_t ndi_latency_sum_ns = 0;
+	int64_t ndi_aligned_sum_ns = 0;    // ts_ahead (aligned/buffered timing)
+	int64_t ndi_raw_latency_sum_ns = 0; // pipeline_latency (raw capture to receive)
 	int ndi_latency_count = 0;
 
 private:

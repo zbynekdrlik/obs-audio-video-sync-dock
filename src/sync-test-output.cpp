@@ -460,10 +460,7 @@ static void st_raw_video_qrcode_decode(struct sync_test_output *st, struct video
 						calldata_set_ptr(&cd, "data", &drop_data);
 						signal_handler_signal(sh, "frame_drop_detected", &cd);
 
-						blog(LOG_DEBUG, "[sync-test] frame_drop: dropped=%d expected_idx=%d received_idx=%d total_dropped=%" PRIu64 " total_received=%" PRIu64,
-						     dropped, expected, cur_index,
-						     st->total_frames_dropped, st->total_frames_received);
-					}
+	}
 				}
 			}
 			st->last_qr_index = cur_index;

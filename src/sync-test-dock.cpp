@@ -85,13 +85,21 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	audioIndexDisplay->setObjectName("audioIndexDisplay");
 	topLayout->addWidget(audioIndexDisplay, y++, 1);
 
-	// 6. NDI Delivery Latency
-	label = new QLabel(obs_module_text("Label.NDIDelivery"), this);
+	// 6. NDI Aligned (buffered/aligned timing - ts_ahead)
+	label = new QLabel(obs_module_text("Label.NDIAligned"), this);
 	topLayout->addWidget(label, y, 0);
 
-	ndiLatencyDisplay = new QLabel("-", this);
-	ndiLatencyDisplay->setObjectName("ndiLatencyDisplay");
-	topLayout->addWidget(ndiLatencyDisplay, y++, 1);
+	ndiAlignedDisplay = new QLabel("-", this);
+	ndiAlignedDisplay->setObjectName("ndiAlignedDisplay");
+	topLayout->addWidget(ndiAlignedDisplay, y++, 1);
+
+	// 7. NDI Latency (raw capture to receive - before alignment)
+	label = new QLabel(obs_module_text("Label.NDILatency"), this);
+	topLayout->addWidget(label, y, 0);
+
+	ndiRawLatencyDisplay = new QLabel("-", this);
+	ndiRawLatencyDisplay->setObjectName("ndiRawLatencyDisplay");
+	topLayout->addWidget(ndiRawLatencyDisplay, y++, 1);
 
 	// Hidden elements for backward compatibility (Index used internally)
 	indexDisplay = new QLabel("-", this);
@@ -231,9 +239,11 @@ void SyncTestDock::on_reset()
 	videoIndexDisplay->setText("-");
 	audioIndexDisplay->setText("-");
 	frameDropDisplay->setText("-");
-	ndiLatencyDisplay->setText("-");
+	ndiAlignedDisplay->setText("-");
+	ndiRawLatencyDisplay->setText("-");
 
-	ndi_latency_sum_ns = 0;
+	ndi_aligned_sum_ns = 0;
+	ndi_raw_latency_sum_ns = 0;
 	ndi_latency_count = 0;
 
 	disconnect_from_ndi_source();
@@ -330,21 +340,28 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 {
 	// Accumulate latency samples and update display every 10 frames
-	ndi_latency_sum_ns += timing.pipeline_latency_ns;
+	// ts_ahead: aligned/buffered timing (presentation - now)
+	// pipeline_latency: raw capture to receive (before alignment)
+	ndi_aligned_sum_ns += timing.ts_ahead_ns;
+	ndi_raw_latency_sum_ns += timing.pipeline_latency_ns;
 	ndi_latency_count++;
 
 	if (ndi_latency_count >= 10) {
-		double avg_latency_ms = (double)ndi_latency_sum_ns / (double)ndi_latency_count / 1e6;
-		ndiLatencyDisplay->setText(QStringLiteral("%1 ms").arg(avg_latency_ms, 0, 'f', 1));
+		double avg_aligned_ms = (double)ndi_aligned_sum_ns / (double)ndi_latency_count / 1e6;
+		double avg_raw_ms = (double)ndi_raw_latency_sum_ns / (double)ndi_latency_count / 1e6;
+
+		ndiAlignedDisplay->setText(QStringLiteral("%1 ms").arg(avg_aligned_ms, 0, 'f', 1));
+		ndiRawLatencyDisplay->setText(QStringLiteral("%1 ms").arg(avg_raw_ms, 0, 'f', 1));
 
 		// Log periodically (every ~30 frames = ~1 second at 30fps)
 		static int log_counter = 0;
 		if (++log_counter >= 3) {
-			blog(LOG_DEBUG, "[sync-dock] NDI delivery latency=%.1f ms", avg_latency_ms);
+			blog(LOG_DEBUG, "[sync-dock] NDI aligned=%.1f ms, raw=%.1f ms", avg_aligned_ms, avg_raw_ms);
 			log_counter = 0;
 		}
 
-		ndi_latency_sum_ns = 0;
+		ndi_aligned_sum_ns = 0;
+		ndi_raw_latency_sum_ns = 0;
 		ndi_latency_count = 0;
 	}
 }
