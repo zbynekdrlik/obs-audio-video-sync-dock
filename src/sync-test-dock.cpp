@@ -93,14 +93,26 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	frameDropDisplay->setObjectName("frameDropDisplay");
 	topLayout->addWidget(frameDropDisplay, y++, 1);
 
+	label = new QLabel(obs_module_text("Label.NDIDelivery"), this);
+	topLayout->addWidget(label, y, 0);
+
+	ndiLatencyDisplay = new QLabel("-", this);
+	ndiLatencyDisplay->setObjectName("ndiLatencyDisplay");
+	topLayout->addWidget(ndiLatencyDisplay, y++, 1);
+
 	mainLayout->addLayout(topLayout);
 	setLayout(mainLayout);
 
-	QTimer::singleShot(0, this, [this]() { start_output(); });
+	QTimer::singleShot(0, this, [this]() {
+		start_output();
+		connect_to_ndi_source();
+	});
 }
 
 SyncTestDock::~SyncTestDock()
 {
+	disconnect_from_ndi_source();
+
 	if (sync_test) {
 		obs_output_stop(sync_test);
 		sync_test = nullptr;
@@ -158,6 +170,16 @@ void SyncTestDock::cb_frame_drop_detected(void *param, calldata_t *cd)
 	QMetaObject::invokeMethod(dock, [dock, found]() { dock->on_frame_drop_detected(found); });
 }
 
+void SyncTestDock::cb_ndi_timing(void *param, calldata_t *cd)
+{
+	auto *dock = (SyncTestDock *)param;
+
+	CD_TO_LOCAL(ndi_timing_info_t *, data, calldata_get_ptr);
+	ndi_timing_info_t timing = *data;
+
+	QMetaObject::invokeMethod(dock, [dock, timing]() { dock->on_ndi_timing(timing); });
+}
+
 void SyncTestDock::start_output()
 {
 	OBSOutputAutoRelease o = obs_output_create(OUTPUT_ID, "sync-test-output", nullptr, nullptr);
@@ -175,6 +197,7 @@ void SyncTestDock::start_output()
 	total_frame_drops = 0;
 	total_frames_seen = 0;
 	last_summary_ts = 0;
+	last_debug_log_ts = 0;
 	sync_count_since_summary = 0;
 	latency_sum_since_summary = 0.0;
 
@@ -206,8 +229,14 @@ void SyncTestDock::on_reset()
 	videoIndexDisplay->setText("-");
 	audioIndexDisplay->setText("-");
 	frameDropDisplay->setText("-");
+	ndiLatencyDisplay->setText("-");
 
+	ndi_latency_sum_ns = 0;
+	ndi_latency_count = 0;
+
+	disconnect_from_ndi_source();
 	start_output();
+	connect_to_ndi_source();
 }
 
 static int missed_markers(int index, int last_index, int max_index)
@@ -255,10 +284,13 @@ void SyncTestDock::on_sync_found(sync_index data)
 	else if (ts < 0)
 		latencyPolarity->setText(obs_module_text("Display.Polarity.Negative"));
 
-	blog(LOG_DEBUG, "[sync-dock] latency=%.1f ms  index=%d  video_ts=%llu  audio_ts=%llu",
-	     latency_ms, data.index,
-	     (unsigned long long)data.video_ts,
-	     (unsigned long long)data.audio_ts);
+	if (data.video_ts - last_debug_log_ts >= 1000000000ULL) {
+		blog(LOG_DEBUG, "[sync-dock] latency=%.1f ms  index=%d  video_ts=%llu  audio_ts=%llu",
+		     latency_ms, data.index,
+		     (unsigned long long)data.video_ts,
+		     (unsigned long long)data.audio_ts);
+		last_debug_log_ts = data.video_ts;
+	}
 
 	sync_count_since_summary++;
 	latency_sum_since_summary += latency_ms;
@@ -291,4 +323,56 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 	blog(LOG_DEBUG, "[sync-dock] frame_drop: dropped=%d expected_idx=%d received_idx=%d total_dropped=%" PRId64 " total_received=%" PRId64 " drop_rate=%.1f%%",
 	     data.dropped_count, data.expected_index, data.received_index,
 	     total_frame_drops, total_frames_seen, drop_rate);
+}
+
+void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
+{
+	// Accumulate latency samples and update display every 10 frames
+	ndi_latency_sum_ns += timing.pipeline_latency_ns;
+	ndi_latency_count++;
+
+	if (ndi_latency_count >= 10) {
+		double avg_latency_ms = (double)ndi_latency_sum_ns / (double)ndi_latency_count / 1e6;
+		ndiLatencyDisplay->setText(QStringLiteral("%1 ms").arg(avg_latency_ms, 0, 'f', 1));
+		ndi_latency_sum_ns = 0;
+		ndi_latency_count = 0;
+	}
+}
+
+void SyncTestDock::connect_to_ndi_source()
+{
+	// Find the first NDI source and connect to its ndi_timing signal
+	obs_enum_sources([](void *param, obs_source_t *source) {
+		auto *dock = (SyncTestDock *)param;
+
+		const char *source_id = obs_source_get_id(source);
+		if (source_id && strcmp(source_id, "ndi_source") == 0) {
+			// Found an NDI source, connect to its signal
+			auto *sh = obs_source_get_signal_handler(source);
+			signal_handler_connect(sh, "ndi_timing", cb_ndi_timing, dock);
+
+			// Store weak reference for later disconnection
+			dock->ndi_source_ref = obs_source_get_weak_source(source);
+
+			blog(LOG_INFO, "[sync-dock] Connected to NDI source '%s' for timing signals",
+			     obs_source_get_name(source));
+			return false; // Stop enumeration
+		}
+		return true; // Continue enumeration
+	}, this);
+}
+
+void SyncTestDock::disconnect_from_ndi_source()
+{
+	if (!ndi_source_ref)
+		return;
+
+	OBSSourceAutoRelease source = obs_weak_source_get_source(ndi_source_ref);
+	if (source) {
+		auto *sh = obs_source_get_signal_handler(source);
+		signal_handler_disconnect(sh, "ndi_timing", cb_ndi_timing, this);
+		blog(LOG_DEBUG, "[sync-dock] Disconnected from NDI source timing signals");
+	}
+
+	ndi_source_ref = nullptr;
 }
