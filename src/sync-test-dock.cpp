@@ -437,16 +437,20 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 	// NDI Receive: capture → receive (network speed)
 	//
 	// These metrics require synchronized clocks (NTP/PTP) between sender and receiver.
-	// If pipeline_latency is negative, clocks are not synchronized - show warning.
+	// If pipeline_latency is significantly negative (< -50ms), clocks are not synchronized.
+	// Small negative values (-50ms to 0) can occur due to measurement jitter with synced clocks.
 
-	if (timing.pipeline_latency_ns < 0) {
-		// Clocks not synchronized - pipeline_latency is meaningless
+	const int64_t CLOCK_SYNC_THRESHOLD_NS = -50000000LL;  // -50ms tolerance
+
+	if (timing.pipeline_latency_ns < CLOCK_SYNC_THRESHOLD_NS) {
+		// Clocks significantly out of sync - pipeline_latency is meaningless
 		static bool warned = false;
 		if (!warned) {
 			blog(LOG_WARNING, "[sync-dock] Sender/receiver clocks not synchronized. "
-				"pipeline_latency=%.1f ms (should be positive). "
+				"pipeline_latency=%.1f ms (threshold: %.0f ms). "
 				"Enable NTP on both machines for accurate NDI timing metrics.",
-				(double)timing.pipeline_latency_ns / 1e6);
+				(double)timing.pipeline_latency_ns / 1e6,
+				(double)CLOCK_SYNC_THRESHOLD_NS / 1e6);
 			warned = true;
 		}
 		ndiReleaseDisplay->setText("Clocks unsync'd");
@@ -455,9 +459,11 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 		ndi_receive_sum_ns = 0;
 		ndi_timing_count = 0;
 	} else {
-		// Clocks are synchronized - compute meaningful metrics
-		int64_t ndi_release_ns = timing.pipeline_latency_ns + timing.ts_ahead_ns;
-		int64_t ndi_receive_ns = timing.pipeline_latency_ns;
+		// Clocks are synchronized (or close enough) - compute meaningful metrics
+		// Clamp slightly negative values to 0 (measurement jitter)
+		int64_t pipeline_ns = timing.pipeline_latency_ns < 0 ? 0 : timing.pipeline_latency_ns;
+		int64_t ndi_release_ns = pipeline_ns + timing.ts_ahead_ns;
+		int64_t ndi_receive_ns = pipeline_ns;
 
 		ndi_release_sum_ns += ndi_release_ns;
 		ndi_receive_sum_ns += ndi_receive_ns;
