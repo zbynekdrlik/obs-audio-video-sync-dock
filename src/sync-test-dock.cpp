@@ -45,6 +45,8 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	connect(resetButton, &QPushButton::clicked, this, &SyncTestDock::on_reset);
 
 	QLabel *label;
+
+	// 1. Latency (main display)
 	label = new QLabel(obs_module_text("Label.Latency"), this);
 	label->setProperty("class", "text-large");
 	topLayout->addWidget(label, y, 0);
@@ -54,38 +56,7 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	latencyDisplay->setProperty("class", "text-large");
 	topLayout->addWidget(latencyDisplay, y++, 1);
 
-	latencyPolarity = new QLabel("-", this);
-	latencyPolarity->setObjectName("latencyPolarity");
-	topLayout->addWidget(latencyPolarity, y++, 1);
-
-	label = new QLabel(obs_module_text("Label.Index"), this);
-	topLayout->addWidget(label, y, 0);
-
-	indexDisplay = new QLabel("-", this);
-	indexDisplay->setObjectName("indexDisplay");
-	topLayout->addWidget(indexDisplay, y++, 1);
-
-	label = new QLabel(obs_module_text("Label.Frequency"), this);
-	topLayout->addWidget(label, y, 0);
-
-	frequencyDisplay = new QLabel("-", this);
-	frequencyDisplay->setObjectName("frequencyDisplay");
-	topLayout->addWidget(frequencyDisplay, y++, 1);
-
-	label = new QLabel(obs_module_text("Label.VideoIndex"), this);
-	topLayout->addWidget(label, y, 0);
-
-	videoIndexDisplay = new QLabel("-", this);
-	videoIndexDisplay->setObjectName("videoIndexDisplay");
-	topLayout->addWidget(videoIndexDisplay, y++, 1);
-
-	label = new QLabel(obs_module_text("Label.AudioIndex"), this);
-	topLayout->addWidget(label, y, 0);
-
-	audioIndexDisplay = new QLabel("-", this);
-	audioIndexDisplay->setObjectName("audioIndexDisplay");
-	topLayout->addWidget(audioIndexDisplay, y++, 1);
-
+	// 2. Frame Drops (moved up after latency)
 	label = new QLabel(obs_module_text("Label.FrameDrops"), this);
 	topLayout->addWidget(label, y, 0);
 
@@ -93,12 +64,43 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	frameDropDisplay->setObjectName("frameDropDisplay");
 	topLayout->addWidget(frameDropDisplay, y++, 1);
 
+	// 3. Audio polarity (early/late - moved before video index)
+	latencyPolarity = new QLabel("-", this);
+	latencyPolarity->setObjectName("latencyPolarity");
+	topLayout->addWidget(latencyPolarity, y++, 1);
+
+	// 4. Video Index
+	label = new QLabel(obs_module_text("Label.VideoIndex"), this);
+	topLayout->addWidget(label, y, 0);
+
+	videoIndexDisplay = new QLabel("-", this);
+	videoIndexDisplay->setObjectName("videoIndexDisplay");
+	topLayout->addWidget(videoIndexDisplay, y++, 1);
+
+	// 5. Audio Index
+	label = new QLabel(obs_module_text("Label.AudioIndex"), this);
+	topLayout->addWidget(label, y, 0);
+
+	audioIndexDisplay = new QLabel("-", this);
+	audioIndexDisplay->setObjectName("audioIndexDisplay");
+	topLayout->addWidget(audioIndexDisplay, y++, 1);
+
+	// 6. NDI Delivery Latency
 	label = new QLabel(obs_module_text("Label.NDIDelivery"), this);
 	topLayout->addWidget(label, y, 0);
 
 	ndiLatencyDisplay = new QLabel("-", this);
 	ndiLatencyDisplay->setObjectName("ndiLatencyDisplay");
 	topLayout->addWidget(ndiLatencyDisplay, y++, 1);
+
+	// Hidden elements for backward compatibility (Index used internally)
+	indexDisplay = new QLabel("-", this);
+	indexDisplay->setObjectName("indexDisplay");
+	indexDisplay->hide();
+
+	frequencyDisplay = new QLabel("-", this);
+	frequencyDisplay->setObjectName("frequencyDisplay");
+	frequencyDisplay->hide();
 
 	mainLayout->addLayout(topLayout);
 	setLayout(mainLayout);
