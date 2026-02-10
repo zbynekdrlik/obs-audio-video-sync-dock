@@ -434,38 +434,54 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 	// --- Update averaged NDI Release/Receive displays ---
 
 	// NDI Release: capture → presentation (total delay)
-	// = pipeline_latency + ts_ahead
-	// = (capture → now) + (now → presentation)
-	// Always positive: frame presented AFTER capture
-	int64_t ndi_release_ns = timing.pipeline_latency_ns + timing.ts_ahead_ns;
-
 	// NDI Receive: capture → receive (network speed)
-	// = wall_clock - ndi_timecode (already computed as pipeline_latency)
-	// Should be smallest possible - measures network delivery speed
-	int64_t ndi_receive_ns = timing.pipeline_latency_ns;
+	//
+	// These metrics require synchronized clocks (NTP/PTP) between sender and receiver.
+	// If pipeline_latency is negative, clocks are not synchronized - show warning.
 
-	ndi_release_sum_ns += ndi_release_ns;
-	ndi_receive_sum_ns += ndi_receive_ns;
-	ndi_timing_count++;
-
-	if (ndi_timing_count >= 10) {
-		double avg_release_ms = (double)ndi_release_sum_ns / (double)ndi_timing_count / 1e6;
-		double avg_receive_ms = (double)ndi_receive_sum_ns / (double)ndi_timing_count / 1e6;
-
-		ndiReleaseDisplay->setText(QStringLiteral("%1 ms").arg(avg_release_ms, 0, 'f', 1));
-		ndiReceiveDisplay->setText(QStringLiteral("%1 ms").arg(avg_receive_ms, 0, 'f', 1));
-
-		// Log periodically (every ~30 frames = ~1 second at 30fps)
-		static int log_counter = 0;
-		if (++log_counter >= 3) {
-			blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms, ts_ahead=%.1f ms",
-			     avg_release_ms, avg_receive_ms, ts_ahead_ms);
-			log_counter = 0;
+	if (timing.pipeline_latency_ns < 0) {
+		// Clocks not synchronized - pipeline_latency is meaningless
+		static bool warned = false;
+		if (!warned) {
+			blog(LOG_WARNING, "[sync-dock] Sender/receiver clocks not synchronized. "
+				"pipeline_latency=%.1f ms (should be positive). "
+				"Enable NTP on both machines for accurate NDI timing metrics.",
+				(double)timing.pipeline_latency_ns / 1e6);
+			warned = true;
 		}
-
+		ndiReleaseDisplay->setText("Clocks unsync'd");
+		ndiReceiveDisplay->setText("Clocks unsync'd");
 		ndi_release_sum_ns = 0;
 		ndi_receive_sum_ns = 0;
 		ndi_timing_count = 0;
+	} else {
+		// Clocks are synchronized - compute meaningful metrics
+		int64_t ndi_release_ns = timing.pipeline_latency_ns + timing.ts_ahead_ns;
+		int64_t ndi_receive_ns = timing.pipeline_latency_ns;
+
+		ndi_release_sum_ns += ndi_release_ns;
+		ndi_receive_sum_ns += ndi_receive_ns;
+		ndi_timing_count++;
+
+		if (ndi_timing_count >= 10) {
+			double avg_release_ms = (double)ndi_release_sum_ns / (double)ndi_timing_count / 1e6;
+			double avg_receive_ms = (double)ndi_receive_sum_ns / (double)ndi_timing_count / 1e6;
+
+			ndiReleaseDisplay->setText(QStringLiteral("%1 ms").arg(avg_release_ms, 0, 'f', 1));
+			ndiReceiveDisplay->setText(QStringLiteral("%1 ms").arg(avg_receive_ms, 0, 'f', 1));
+
+			// Log periodically (every ~30 frames = ~1 second at 30fps)
+			static int log_counter = 0;
+			if (++log_counter >= 3) {
+				blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms, ts_ahead=%.1f ms",
+				     avg_release_ms, avg_receive_ms, ts_ahead_ms);
+				log_counter = 0;
+			}
+
+			ndi_release_sum_ns = 0;
+			ndi_receive_sum_ns = 0;
+			ndi_timing_count = 0;
+		}
 	}
 }
 
