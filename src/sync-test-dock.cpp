@@ -341,6 +341,10 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 
 void SyncTestDock::connect_to_ndi_source()
 {
+	// Already connected?
+	if (ndi_source_ref)
+		return;
+
 	// Find the first NDI source and connect to its ndi_timing signal
 	obs_enum_sources([](void *param, obs_source_t *source) {
 		auto *dock = (SyncTestDock *)param;
@@ -360,6 +364,12 @@ void SyncTestDock::connect_to_ndi_source()
 		}
 		return true; // Continue enumeration
 	}, this);
+
+	// If no NDI source found, retry after a delay (sources may not be loaded yet)
+	if (!ndi_source_ref) {
+		blog(LOG_DEBUG, "[sync-dock] No NDI source found, will retry in 2 seconds");
+		QTimer::singleShot(2000, this, [this]() { connect_to_ndi_source(); });
+	}
 }
 
 void SyncTestDock::disconnect_from_ndi_source()
