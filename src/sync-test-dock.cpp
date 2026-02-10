@@ -85,21 +85,21 @@ SyncTestDock::SyncTestDock(QWidget *parent) : QFrame(parent)
 	audioIndexDisplay->setObjectName("audioIndexDisplay");
 	topLayout->addWidget(audioIndexDisplay, y++, 1);
 
-	// 6. NDI Aligned (buffered/aligned timing - ts_ahead)
-	label = new QLabel(obs_module_text("Label.NDIAligned"), this);
+	// 6. NDI Release (capture to presentation - total delay)
+	label = new QLabel(obs_module_text("Label.NDIRelease"), this);
 	topLayout->addWidget(label, y, 0);
 
-	ndiAlignedDisplay = new QLabel("-", this);
-	ndiAlignedDisplay->setObjectName("ndiAlignedDisplay");
-	topLayout->addWidget(ndiAlignedDisplay, y++, 1);
+	ndiReleaseDisplay = new QLabel("-", this);
+	ndiReleaseDisplay->setObjectName("ndiReleaseDisplay");
+	topLayout->addWidget(ndiReleaseDisplay, y++, 1);
 
-	// 7. NDI Latency (raw capture to receive - before alignment)
-	label = new QLabel(obs_module_text("Label.NDILatency"), this);
+	// 7. NDI Receive (capture to receive - network speed)
+	label = new QLabel(obs_module_text("Label.NDIReceive"), this);
 	topLayout->addWidget(label, y, 0);
 
-	ndiRawLatencyDisplay = new QLabel("-", this);
-	ndiRawLatencyDisplay->setObjectName("ndiRawLatencyDisplay");
-	topLayout->addWidget(ndiRawLatencyDisplay, y++, 1);
+	ndiReceiveDisplay = new QLabel("-", this);
+	ndiReceiveDisplay->setObjectName("ndiReceiveDisplay");
+	topLayout->addWidget(ndiReceiveDisplay, y++, 1);
 
 	// Hidden elements for backward compatibility (Index used internally)
 	indexDisplay = new QLabel("-", this);
@@ -239,12 +239,12 @@ void SyncTestDock::on_reset()
 	videoIndexDisplay->setText("-");
 	audioIndexDisplay->setText("-");
 	frameDropDisplay->setText("-");
-	ndiAlignedDisplay->setText("-");
-	ndiRawLatencyDisplay->setText("-");
+	ndiReleaseDisplay->setText("-");
+	ndiReceiveDisplay->setText("-");
 
-	ndi_aligned_sum_ns = 0;
-	ndi_raw_latency_sum_ns = 0;
-	ndi_latency_count = 0;
+	ndi_release_sum_ns = 0;
+	ndi_receive_sum_ns = 0;
+	ndi_timing_count = 0;
 
 	disconnect_from_ndi_source();
 	start_output();
@@ -339,30 +339,38 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 
 void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 {
-	// Accumulate latency samples and update display every 10 frames
-	// ts_ahead: aligned/buffered timing (presentation - now)
-	// pipeline_latency: raw capture to receive (before alignment)
-	ndi_aligned_sum_ns += timing.ts_ahead_ns;
-	ndi_raw_latency_sum_ns += timing.pipeline_latency_ns;
-	ndi_latency_count++;
+	// NDI Release: capture → presentation (total delay)
+	// = presentation_ns - ndi_timecode_ns
+	// Always positive: frame presented AFTER capture
+	int64_t ndi_release_ns = timing.presentation_ns - timing.ndi_timecode_ns;
 
-	if (ndi_latency_count >= 10) {
-		double avg_aligned_ms = (double)ndi_aligned_sum_ns / (double)ndi_latency_count / 1e6;
-		double avg_raw_ms = (double)ndi_raw_latency_sum_ns / (double)ndi_latency_count / 1e6;
+	// NDI Receive: capture → receive (network speed)
+	// = wall_clock - ndi_timecode (already computed as pipeline_latency)
+	// Should be smallest possible - measures network delivery speed
+	int64_t ndi_receive_ns = timing.pipeline_latency_ns;
 
-		ndiAlignedDisplay->setText(QStringLiteral("%1 ms").arg(avg_aligned_ms, 0, 'f', 1));
-		ndiRawLatencyDisplay->setText(QStringLiteral("%1 ms").arg(avg_raw_ms, 0, 'f', 1));
+	ndi_release_sum_ns += ndi_release_ns;
+	ndi_receive_sum_ns += ndi_receive_ns;
+	ndi_timing_count++;
+
+	if (ndi_timing_count >= 10) {
+		double avg_release_ms = (double)ndi_release_sum_ns / (double)ndi_timing_count / 1e6;
+		double avg_receive_ms = (double)ndi_receive_sum_ns / (double)ndi_timing_count / 1e6;
+
+		ndiReleaseDisplay->setText(QStringLiteral("%1 ms").arg(avg_release_ms, 0, 'f', 1));
+		ndiReceiveDisplay->setText(QStringLiteral("%1 ms").arg(avg_receive_ms, 0, 'f', 1));
 
 		// Log periodically (every ~30 frames = ~1 second at 30fps)
 		static int log_counter = 0;
 		if (++log_counter >= 3) {
-			blog(LOG_DEBUG, "[sync-dock] NDI aligned=%.1f ms, raw=%.1f ms", avg_aligned_ms, avg_raw_ms);
+			blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms",
+			     avg_release_ms, avg_receive_ms);
 			log_counter = 0;
 		}
 
-		ndi_aligned_sum_ns = 0;
-		ndi_raw_latency_sum_ns = 0;
-		ndi_latency_count = 0;
+		ndi_release_sum_ns = 0;
+		ndi_receive_sum_ns = 0;
+		ndi_timing_count = 0;
 	}
 }
 
