@@ -18,6 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include <obs-module.h>
+#include <util/platform.h>
 #include <inttypes.h>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -397,39 +398,43 @@ void SyncTestDock::on_frame_drop_detected(frame_drop_event_s data)
 
 void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 {
-	// --- Update detail displays (every frame for debugging) ---
-	// Show all timing variables in processing order
+	// --- Update detail displays (throttled to once per second for readability) ---
+	uint64_t now_ns = os_gettime_ns();
 
-	// 1. NDI Timecode (display as milliseconds since some epoch, truncated for readability)
-	int64_t tc_ms = timing.ndi_timecode_ns / 1000000;
-	ndiTimecodeDisplay->setText(QStringLiteral("%1").arg(tc_ms % 1000000));  // Last 6 digits
+	if (now_ns - last_timing_display_update_ns >= 1000000000ULL) {
+		last_timing_display_update_ns = now_ns;
 
-	// 2. Clock Offset (stable conversion factor)
-	int64_t offset_ms = timing.clock_offset_ns / 1000000;
-	clockOffsetDisplay->setText(QStringLiteral("%1 ms").arg(offset_ms % 1000000));
+		// 1. NDI Timecode (display as milliseconds since some epoch, truncated for readability)
+		int64_t tc_ms = timing.ndi_timecode_ns / 1000000;
+		ndiTimecodeDisplay->setText(QStringLiteral("%1").arg(tc_ms % 1000000));  // Last 6 digits
 
-	// 3. Buffer (user setting)
-	int64_t buffer_ms = timing.buffer_ns / 1000000;
-	bufferDisplay->setText(QStringLiteral("%1 ms").arg(buffer_ms));
+		// 2. Clock Offset (stable conversion factor)
+		int64_t offset_ms = timing.clock_offset_ns / 1000000;
+		clockOffsetDisplay->setText(QStringLiteral("%1 ms").arg(offset_ms % 1000000));
 
-	// 4. Presentation (computed timestamp)
-	int64_t pres_ms = timing.presentation_ns / 1000000;
-	presentationDisplay->setText(QStringLiteral("%1").arg(pres_ms % 1000000));
+		// 3. Buffer (user setting)
+		int64_t buffer_ms = timing.buffer_ns / 1000000;
+		bufferDisplay->setText(QStringLiteral("%1 ms").arg(buffer_ms));
 
-	// 5. OBS Now (current time)
-	int64_t now_ms = timing.obs_now_ns / 1000000;
-	obsNowDisplay->setText(QStringLiteral("%1").arg(now_ms % 1000000));
+		// 4. Presentation (computed timestamp)
+		int64_t pres_ms = timing.presentation_ns / 1000000;
+		presentationDisplay->setText(QStringLiteral("%1").arg(pres_ms % 1000000));
 
-	// 6. TS Ahead (buffer headroom - most important metric!)
-	double ts_ahead_ms = (double)timing.ts_ahead_ns / 1e6;
-	tsAheadDisplay->setText(QStringLiteral("%1 ms").arg(ts_ahead_ms, 0, 'f', 1));
+		// 5. OBS Now (current time)
+		int64_t now_ms = timing.obs_now_ns / 1000000;
+		obsNowDisplay->setText(QStringLiteral("%1").arg(now_ms % 1000000));
 
-	// 7. Pipeline (network latency)
-	double pipeline_ms = (double)timing.pipeline_latency_ns / 1e6;
-	pipelineDisplay->setText(QStringLiteral("%1 ms").arg(pipeline_ms, 0, 'f', 1));
+		// 6. TS Ahead (buffer headroom - most important metric!)
+		double ts_ahead_ms = (double)timing.ts_ahead_ns / 1e6;
+		tsAheadDisplay->setText(QStringLiteral("%1 ms").arg(ts_ahead_ms, 0, 'f', 1));
 
-	// 8. Frame number
-	frameNumberDisplay->setText(QStringLiteral("%1").arg(timing.frame_number));
+		// 7. Pipeline (network latency)
+		double pipeline_ms = (double)timing.pipeline_latency_ns / 1e6;
+		pipelineDisplay->setText(QStringLiteral("%1 ms").arg(pipeline_ms, 0, 'f', 1));
+
+		// 8. Frame number
+		frameNumberDisplay->setText(QStringLiteral("%1").arg(timing.frame_number));
+	}
 
 	// --- Update averaged NDI Release/Receive displays ---
 
@@ -479,6 +484,7 @@ void SyncTestDock::on_ndi_timing(ndi_timing_info_t timing)
 			// Log periodically (every ~30 frames = ~1 second at 30fps)
 			static int log_counter = 0;
 			if (++log_counter >= 3) {
+				double ts_ahead_ms = (double)timing.ts_ahead_ns / 1e6;
 				blog(LOG_DEBUG, "[sync-dock] NDI release=%.1f ms, receive=%.1f ms, ts_ahead=%.1f ms",
 				     avg_release_ms, avg_receive_ms, ts_ahead_ms);
 				log_counter = 0;

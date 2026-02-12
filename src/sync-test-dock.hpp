@@ -83,6 +83,9 @@ private:
 	int64_t ndi_receive_sum_ns = 0;    // pipeline_latency (capture to receive)
 	int ndi_timing_count = 0;
 
+	// Throttle timing detail display to once per second
+	uint64_t last_timing_display_update_ns = 0;
+
 private:
 	void start_output();
 	void on_reset();
