@@ -1,5 +1,7 @@
 # Audio Video Sync Dock plugin for OBS Studio
 
+> **⚠️ DEPRECATED**: This fork is no longer maintained. The A/V Sync Monitor functionality has been integrated into [DistroAV](https://github.com/DistroAV/DistroAV) (our fork: [zbynekdrlik/DistroAV](https://github.com/zbynekdrlik/DistroAV)). Please use DistroAV for NDI timing and sync monitoring features.
+
 ## Introduction
 
 This is an OBS Studio plugin to measure latency between audio and video.
